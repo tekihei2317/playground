@@ -1,0 +1,12 @@
+{
+  "name": "gib0017/php-spreadsheet",
+  "authors": [
+    {
+      "name": "tekihei2317",
+      "email": "tekihei2317@gmail.com"
+    }
+  ],
+  "require": {
+    "phpoffice/phpspreadsheet": "^1.19"
+  }
+}
