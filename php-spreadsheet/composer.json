@@ -7,6 +7,9 @@
     }
   ],
   "require": {
-    "phpoffice/phpspreadsheet": "^1.19"
+    "phpoffice/phpspreadsheet": "^1.19",
+    "dompdf/dompdf": "^1.0",
+    "mpdf/mpdf": "^8.0",
+    "tecnickcom/tcpdf": "^6.4"
   }
 }
