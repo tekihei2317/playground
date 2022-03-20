@@ -15,13 +15,13 @@ class SelectTest extends TestCase
         $this->sut = new Select();
     }
 
-    public function testSelect()
+    public function testDouble()
     {
-        $this->assertEquals([2, 4, 6, 8], $this->sut->normal([1, 2, 3, 4]));
-    }
+        $data = [1, 2, 4, 5];
+        $expected = [2, 4, 8, 10];
 
-    public function testSelect2()
-    {
-        $this->assertEquals([2, 4, 6, 8], $this->sut->normal2([1, 2, 3, 4]));
+        $this->assertEquals($expected, $this->sut->normal($data));
+        $this->assertEquals($expected, $this->sut->normal2($data));
+        $this->assertEquals($expected, $this->sut->ginq($data)->toArray());
     }
 }
