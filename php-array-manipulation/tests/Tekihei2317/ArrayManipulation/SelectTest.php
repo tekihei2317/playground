@@ -17,11 +17,21 @@ class SelectTest extends TestCase
 
     public function testDouble()
     {
-        $data = [1, 2, 4, 5];
-        $expected = [2, 4, 8, 10];
+        $data = [1, 2, 4, 5, 10];
+        $expected = [2, 4, 8, 10, 20];
 
         $this->assertEquals($expected, $this->sut->normal($data));
         $this->assertEquals($expected, $this->sut->normal2($data));
-        $this->assertEquals($expected, $this->sut->ginq($data)->toArray());
+        // $this->assertEquals($expected, $this->sut->ginq($data)->toArray());
+    }
+
+    public function testDouleIfEvenIndex()
+    {
+        $data = [1, 2, 4, 5, 10];
+        $expected = [2, 2, 8, 5, 20];
+
+        $this->assertEquals($expected, $this->sut->doubleIfEvenIndex($data));
+        $this->assertEquals($expected, $this->sut->doubleIfEvenIndex2($data));
+        $this->assertEquals($expected, $this->sut->doubleIfEvenIndex3($data)->toArray());
     }
 }
