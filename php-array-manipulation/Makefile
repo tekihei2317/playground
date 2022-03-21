@@ -1,4 +1,4 @@
 test:
-	./vendor/bin/phpunit --testdox --colors tests
+	./vendor/bin/phpunit
 psysh:
 	./vendor/bin/psysh
