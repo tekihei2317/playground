@@ -12,7 +12,6 @@
  */
 
 const fs = require("fs");
-const fsPromise = require("fs").promises;
 const path = require("path");
 const git = require("isomorphic-git");
 
@@ -21,27 +20,34 @@ const author = { name: "tekihei2317", email: "tekihei2317@gmail.com" };
 
 async function main() {
   // リポジトリを初期化する
-  await fsPromise.rm(path.join(dir, ".git"), { recursive: true, force: true });
+  await fs.promises.rm(path.join(dir, ".git"), {
+    recursive: true,
+    force: true,
+  });
   await git.init({ fs, dir, defaultBranch: "main" });
   console.log("Initialized git repository.");
 
   // first commitを作成する
-  await fsPromise.writeFile(path.join(dir, "README.md"), "# three-way-merge\n");
+  await fs.promises.writeFile(path.join(dir, "README.md"), "# three-way-merge\n");
+  await git.add({ fs, dir, filepath: "README.md" });
   await git.commit({ fs, dir, message: "added README.md", author });
   console.log("Created first commit.");
 
   // practiceブランチでコミットする
   await git.branch({ fs, dir, ref: "practice" });
   await git.checkout({ fs, dir, ref: "practice" });
-  await fsPromise.writeFile(path.join(dir, "test.txt"), "Hello");
-  await git.commit({ fs, dir, message: "added test.txt", author });
+  // await fs.promises.writeFile(path.join(dir, "test.txt"), "Hello");
+  await fs.promises.writeFile(path.join(dir, "README.md"), "# three-way-merge\n\nマージのアルゴリズムが知りたい\n");
+  await git.add({ fs, dir, filepath: "." });
+  await git.commit({ fs, dir, message: "modify README.md", author });
   console.log("Created commit on practice.");
 
   // mainブランチにpracticeブランチをマージする
+  // FIXME: マージがバグっている気がする(インデックスがコミットに反映されていない)
   await git.checkout({ fs, dir, ref: "main" });
-  // FIXME: fastForward: falseにするとエラーが発生した
-  // await git.merge({ fs, dir, theirs: "practice", author, fastForward: false });
-  await git.merge({ fs, dir, theirs: "practice", author, fastForward: true });
+  const mergeResult = await git.merge({ fs, dir, theirs: "practice", author, fastForward: true });
+  console.log("Merge practice branch into main.");
+  console.log(mergeResult);
 }
 
 main();
