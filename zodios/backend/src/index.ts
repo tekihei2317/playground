@@ -15,23 +15,24 @@ const UsersSchema = z.array(UserSchema);
 
 type User = z.infer<typeof UserSchema>;
 
-const api = makeApi([
+// これをフロントエンドと共通化したいが、makeApiに渡すとバックエンドがコンパイルエラーになる
+export const apiDefinition = [
   {
-    method: "get",
+    method: "get" as const,
     path: "/users/:id",
     response: UserSchema,
     alias: "getUser",
     description: "Get user",
   },
   {
-    method: "get",
+    method: "get" as const,
     path: "/users",
     response: UsersSchema,
     alias: "getUsers",
     description: "Get users",
   },
   {
-    method: "post",
+    method: "post" as const,
     path: "/users",
     response: UserSchema,
     alias: "createUser",
@@ -39,7 +40,38 @@ const api = makeApi([
     parameters: [
       {
         name: "body",
-        type: "Body",
+        type: "Body" as const,
+        schema: CreateUserSchema,
+      },
+    ],
+  },
+];
+
+const api = makeApi([
+  {
+    method: "get" as const,
+    path: "/users/:id",
+    response: UserSchema,
+    alias: "getUser",
+    description: "Get user",
+  },
+  {
+    method: "get" as const,
+    path: "/users",
+    response: UsersSchema,
+    alias: "getUsers",
+    description: "Get users",
+  },
+  {
+    method: "post" as const,
+    path: "/users",
+    response: UserSchema,
+    alias: "createUser",
+    description: "Create user",
+    parameters: [
+      {
+        name: "body",
+        type: "Body" as const,
         schema: CreateUserSchema,
       },
     ],
