@@ -1,0 +1,12 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "hello": "echo 'This is api package.'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tekihei2317",
+  "license": "ISC"
+}
