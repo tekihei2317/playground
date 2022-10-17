@@ -9,9 +9,9 @@ function App() {
     api.$get().then((res) => {
       setGreeting(res.hello);
     });
-    api.hi.$get().then((res) => {
-      setGreeting2(res.hello);
-    });
+    // api.hi.$get().then((res) => {
+    //   setGreeting2(res.hello);
+    // });
   }, []);
 
   return (

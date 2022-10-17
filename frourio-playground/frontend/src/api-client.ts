@@ -1,4 +1,4 @@
-import $api from "../api/$api";
+import $api from "../../backend/api/$api";
 import aspida from "@aspida/fetch";
 
 export const api = $api(

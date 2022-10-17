@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const users = await apiClient.get("/users");
+      // const users = await apiClient.get("/users");
       // console.log(users);
     };
     fetchData();
