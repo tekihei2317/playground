@@ -1,4 +1,4 @@
-import { CreateTaskInput, TaskId, UpdateTaskInput } from "../trpc/router/task";
+import { CreateTaskInput, TaskId, UpdateTaskInput } from "../trpc/schema";
 import { Context } from "../trpc/context";
 
 const userId = "tekihei2317"; // TODO:

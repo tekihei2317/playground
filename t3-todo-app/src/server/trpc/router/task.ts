@@ -1,4 +1,3 @@
-import { z } from "zod";
 import {
   createTask,
   updateTask,
@@ -7,24 +6,7 @@ import {
 } from "../../use-cases/task";
 import { router, publicProcedure } from "../trpc";
 import { getTaskProcedure } from "../../procedures/task";
-
-// schema
-const taskIdSchema = z.string().cuid();
-
-const createTaskSchema = z.object({
-  title: z.string().max(20),
-  body: z.string().min(5),
-});
-
-const updateTaskSchema = z.object({
-  id: taskIdSchema, // パスパラメータがないので直接含める
-  title: z.string().max(20),
-  body: z.string().min(5),
-});
-
-export type TaskId = z.TypeOf<typeof taskIdSchema>;
-export type CreateTaskInput = z.TypeOf<typeof createTaskSchema>;
-export type UpdateTaskInput = z.TypeOf<typeof updateTaskSchema>;
+import { createTaskSchema, taskIdSchema, updateTaskSchema } from "../schema";
 
 // procedure
 const createTaskProcedure = publicProcedure
@@ -50,7 +32,7 @@ const deleteTaskProcedure = publicProcedure
   });
 
 // router
-export const todoRouter = router({
+export const taskRouter = router({
   getTasks: getTasksProcedure,
   getTask: getTaskProcedure,
   createTask: createTaskProcedure,
