@@ -5,8 +5,12 @@
   "main": "index.js",
   "scripts": {
     "hello": "echo 'This is client package.'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -v"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  }
 }
