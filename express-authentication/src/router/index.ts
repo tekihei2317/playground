@@ -1,15 +1,12 @@
 import { Router } from "express";
+import { requireLogin } from "../middlewares/require-login";
+import { User } from "../utils/user";
 import { validateRequired, validateString } from "../utils/validation";
 import { taskRouter } from "./task-router";
 
 const mainRouter = Router();
 
 mainRouter.use("/tasks", taskRouter);
-
-type User = {
-  userName: string;
-  password: string;
-};
 
 const users: User[] = [
   {
@@ -65,21 +62,13 @@ mainRouter.post("/signin", function (req, res) {
       .json({ message: "ユーザー名またはパスワードが間違っています" });
   }
 
-  req.session.currentUserIdentifier = userName;
+  req.session.currentUser = user;
+
   return res.status(201).json({ message: "ログインしました" });
 });
 
-mainRouter.get("/me", function (req, res) {
-  // ログイン中のユーザーを取得する
-  if (req.session.currentUserIdentifier === undefined) {
-    // TODO: ミドルウェアで弾く
-    throw new Error("ログインしていません");
-  }
-
-  const user = users.find(
-    (user) => user.userName === req.session.currentUserIdentifier
-  );
-  return res.status(201).json(user);
+mainRouter.get("/me", requireLogin, function (req, res) {
+  return res.status(200).json(req.session.currentUser);
 });
 
 mainRouter.get("/session-test", function (req, res) {
