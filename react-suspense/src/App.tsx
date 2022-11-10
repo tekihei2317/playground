@@ -23,22 +23,27 @@ async function fetchData1(): Promise<string> {
   return `Hello, ${(Math.random() * 1000).toFixed(0)}`;
 }
 
-const DataLoader = () => {
-  const [data, setData] = useState<string>();
-  const [loading, setLoading] = useState(false);
+const dataMap: Map<string, unknown> = new Map();
 
-  // 初回でサスペンドするとステートの記憶領域が確保されないため、初回はサスペンドしない
-  if (loading && data === undefined) {
-    throw fetchData1().then(setData);
+function useData<T>(cacheKey: string, fetch: () => Promise<T>): T {
+  const cachedData = dataMap.get(cacheKey) as T | undefined;
+  if (cachedData === undefined) {
+    throw fetch().then((d) => dataMap.set(cacheKey, d));
   }
 
-  return (
-    <div>
-      <div>Data is {data}</div>
-      {/* クリックするとサスペンドする */}
-      <button onClick={() => setLoading(true)}>load</button>
-    </div>
-  );
+  return cachedData;
+}
+
+export const DataLoader1 = () => {
+  const data = useData("DataLoader1", fetchData1);
+
+  return <div>Data is {data}</div>;
+};
+
+export const DataLoader2 = () => {
+  const data = useData("DataLoader2", fetchData1);
+
+  return <div>Data is {data}</div>;
 };
 
 function App() {
@@ -46,7 +51,8 @@ function App() {
     <div>
       <div>React App!</div>
       <Suspense fallback={<p>loading...</p>}>
-        <DataLoader />
+        <DataLoader1 />
+        <DataLoader2 />
       </Suspense>
     </div>
   );
