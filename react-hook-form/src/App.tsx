@@ -1,34 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const signUpSchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  age: z.number().positive().int(),
+  website: z.string().url(),
+});
+
+type SignUpSchema = z.infer<typeof signUpSchema>;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpSchema>({ resolver: zodResolver(signUpSchema) });
 
   return (
-    <div className="App">
+    <form
+      onSubmit={handleSubmit((d) => console.log(d))}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+      }}
+    >
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <label>First Name</label>
+        <input type="text" {...register("firstName")} />
+        <p style={{ color: "red" }}>{errors.firstName?.message}</p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        <label>Last Name</label>
+        <input type="text" {...register("lastName")} />
+        <p style={{ color: "red" }}>{errors.lastName?.message}</p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+      <div>
+        <label>Age</label>
+        <input type="text" {...register("age", { valueAsNumber: true })} />
+        <p style={{ color: "red" }}>{errors.age?.message}</p>
+      </div>
+      <div>
+        <label>Website</label>
+        <input
+          type="text"
+          defaultValue="http://example.com"
+          {...register("website")}
+        />
+        <p style={{ color: "red" }}>{errors.website?.message}</p>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
 }
 
-export default App
+export default App;
