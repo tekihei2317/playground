@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -38,15 +40,21 @@ export function getSortedPostsData() {
   });
 }
 
-export function getPostData(id: string) {
+async function markdownToHtml(content: string) {
+  return (await remark().use(html).process(content)).toString();
+}
+
+export async function getPostData(id: string) {
   const fullPath = path.join(postsDirectory, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf-8");
 
   const matterResult = matter(fileContents);
   const frontMatter = matterResult.data as ParsedFrontMatter;
+  const contentHtml = await markdownToHtml(matterResult.content);
 
   return {
     id,
+    contentHtml,
     title: frontMatter.title ?? "No title",
     date: frontMatter.date ?? "2000-01-01",
   };

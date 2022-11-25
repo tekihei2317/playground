@@ -62,13 +62,13 @@ export default function Layout({ children, home }: LayoutProps) {
             </h2>
           </>
         )}
-        <main>{children}</main>
-        {!home && (
-          <div className={styles.backToHome}>
-            <Link href="/">Back to home</Link>
-          </div>
-        )}
       </header>
+      <main>{children}</main>
+      {!home && (
+        <div className={styles.backToHome}>
+          <Link href="/">← Back to home</Link>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import { getAllPostIds, getPostData } from "../../lib/posts";
 import { InferGetStaticPropsType } from "next";
 import Layout from "../../components/layout";
+import Head from "next/head";
+import us from "../../styles/utils.module.css";
 
 export function getStaticPaths() {
   const paths = getAllPostIds();
@@ -18,7 +20,7 @@ type Params = {
 };
 
 export async function getStaticProps({ params }: Params) {
-  const postData = getPostData(params.id);
+  const postData = await getPostData(params.id);
 
   return {
     props: {
@@ -32,11 +34,14 @@ type PostProps = InferGetStaticPropsType<typeof getStaticProps>;
 export default function Post({ postData }: PostProps) {
   return (
     <Layout>
-      {postData.title}
-      <br />
-      {postData.id}
-      <br />
-      {postData.date}
+      <Head>
+        <title>{postData.title}</title>
+      </Head>
+      <article>
+        <h1 className={us.headingXl}>{postData.title}</h1>
+        <div>{postData.date}</div>
+        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }}></div>
+      </article>
     </Layout>
   );
 }
