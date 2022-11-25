@@ -8,7 +8,7 @@ const name = "tekihei2317";
 export const siteTitle = "Next.js Sample Website";
 
 type LayoutProps = {
-  home: boolean;
+  home?: boolean;
   children: React.ReactNode;
 };
 
