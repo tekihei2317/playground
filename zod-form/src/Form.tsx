@@ -7,6 +7,9 @@ import {
   UseFormProps,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback } from "react";
+
+// render prop
 
 type FormProps<TSchema extends ZodType<FieldValues>> = {
   schema: TSchema;
@@ -34,3 +37,41 @@ export const Form = <TSchema extends ZodType<FieldValues>>({
     </form>
   );
 };
+
+// custom hook
+
+type ZodFormProps<TSchema extends ZodType<FieldValues>> = {
+  onSubmit: SubmitHandler<z.output<TSchema>>;
+  children: React.ReactNode;
+} & Omit<React.ComponentProps<"form">, "onSubmit" | "children">;
+
+type UseZodFormReturn<TSchema extends ZodType<FieldValues>> = UseFormReturn<
+  z.input<TSchema>
+> & {
+  Form: (props: ZodFormProps<TSchema>) => JSX.Element;
+};
+
+export function useZodForm<TSchema extends ZodType<FieldValues>>(
+  schema: TSchema,
+  options: UseFormProps<z.input<TSchema>> = {}
+): UseZodFormReturn<TSchema> {
+  const methods = useForm<z.input<TSchema>>({
+    resolver: zodResolver(schema),
+    ...options,
+  });
+
+  const Form = useCallback(
+    ({ onSubmit, children, ...props }: ZodFormProps<TSchema>) => {
+      const handleSubmit = methods.handleSubmit(onSubmit);
+
+      return (
+        <form onSubmit={handleSubmit} {...props}>
+          {children}
+        </form>
+      );
+    },
+    [methods]
+  );
+
+  return { ...methods, Form };
+}
