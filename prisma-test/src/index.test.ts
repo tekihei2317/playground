@@ -1,10 +1,9 @@
 import { createPost, getPosts } from ".";
+import { PostFactory } from "./factory";
+import { initialize } from "./__generated__/fabbrica";
 
 const prisma = jestPrisma.client;
-
-test("1 + 1が2になること", () => {
-  expect(1 + 1).toBe(2);
-});
+initialize({ prisma });
 
 test("ポストを登録できること", async () => {
   await createPost(prisma);
@@ -13,12 +12,13 @@ test("ポストを登録できること", async () => {
 });
 
 test("ポストの一覧を取得できること", async () => {
-  await createPost(prisma);
+  await PostFactory.createList(3);
 
   const posts = await getPosts(prisma);
 
+  expect(posts.length).toBe(3);
   expect(posts[0]).toMatchObject({
-    title: "テスト",
-    body: "テストです",
+    title: "サンプル投稿",
+    body: "サンプルです",
   });
 });
